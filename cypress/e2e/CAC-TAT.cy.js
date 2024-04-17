@@ -1,7 +1,8 @@
 describe("Verificar o atendimento ao cliente TAT", () => {
   //beforeEach realiza a ação antes de cada teste.
   beforeEach(() => {
-    cy.viewport(410, 860);
+    // cy.viewport(410, 860); // Mobile
+    cy.viewport(1366, 720); //desktop
     cy.visit("./src/index.html");
   });
 
