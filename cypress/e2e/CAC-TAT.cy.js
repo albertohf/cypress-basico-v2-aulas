@@ -2,7 +2,7 @@ describe("Verificar o atendimento ao cliente TAT", () => {
   //beforeEach realiza a ação antes de cada teste.
   beforeEach(() => {
     // cy.viewport(410, 860); // Mobile
-    cy.viewport(1366, 720); //desktop
+    cy.viewport(1366, 860); //desktop
     cy.visit("./src/index.html");
   });
 
@@ -75,8 +75,12 @@ describe("Verificar o atendimento ao cliente TAT", () => {
   });
 
   it("enviar formulario com comando customizado", () => {
+    cy.clock();
     cy.fillMandatoryFieldsAndSubmit("alberto", "fernandes");
+
     cy.get(".success").should("be.visible");
+    cy.tick(3000);
+    cy.get(".success").should("not.be.visible");
   });
 
   it("selecionar campos options em campo flutuante", () => {
@@ -156,12 +160,58 @@ describe("Verificar o atendimento ao cliente TAT", () => {
     cy.get("#privacy a").should("have.attr", "target", "_blank");
   });
   it("acessa a página da política de privacidade removendo o target e então clicando no link", () => {
-    cy.get("#privacy a").invoke("removeAttr", "target").click().$checkbox;
+    cy.get("#privacy a").invoke("removeAttr", "target").click();
 
     cy.contains("Talking About Testing").should("be.visible");
     cy.title().should(
       "be.equal",
       "Central de Atendimento ao Cliente TAT - Política de privacidade"
     );
+  });
+
+  it("exibe e esconde as mensagens de sucesso e erro usando o .invoke", () => {
+    cy.get(".success")
+      .should("not.be.visible")
+      .invoke("show")
+      .should("be.visible")
+      .and("contain", "Mensagem enviada com sucesso.")
+      .invoke("hide")
+      .should("not.be.visible");
+    cy.get(".error")
+      .should("not.be.visible")
+      .invoke("show")
+      .should("be.visible")
+      .and("contain", "Valide os campos obrigatórios!")
+      .invoke("hide")
+      .should("not.be.visible");
+  });
+
+  it("preenche a area de texto usando o comando invoke", () => {
+    const longText = Cypress._.repeat("0123456789", 20);
+
+    cy.get("#open-text-area")
+      .invoke("val", longText)
+      .should("have.value", longText);
+  });
+
+  it("faz uma requisição HTTP", () => {
+    cy.request(
+      "https://cac-tat.s3.eu-central-1.amazonaws.com/index.html"
+    ).should((res) => {
+      const { status, statusText, body } = res;
+      expect(status).to.eq(200);
+      expect(statusText).to.eq("OK");
+      console.log(body);
+      expect(body).to.include("CAC TAT");
+    });
+  });
+
+  //   cy.request("https://cac-tat.s3.eu-central-1.amazonaws.com/index.html").as(
+  //     "request"
+  //   );
+  //   cy.get("@request").its("status").should("equal", 200);
+  // });
+  it("econtrar o gato", () => {
+    cy.get("#cat").should("not.be.visible").invoke("show").should("be.visible");
   });
 });
