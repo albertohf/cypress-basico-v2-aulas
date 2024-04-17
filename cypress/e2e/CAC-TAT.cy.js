@@ -11,16 +11,25 @@ describe("Verificar o atendimento ao cliente TAT", () => {
   });
 
   it("campos obrigatorios do formulario", () => {
+    cy.clock();
     cy.fillMandatoryFieldsAndSubmit("alberto", "fernandes");
+
     cy.get(".success").should("be.visible");
+
+    cy.tick(3000);
+    cy.get(".success").should("not.be.visible");
   });
 
   it("exibir mensagem ao submeter email error", () => {
+    cy.clock();
     cy.get("#firstName").type("teste");
     cy.get("#lastName").type("teste");
     cy.get("#email").type("lallaal");
     cy.contains("button", "Enviar").click();
+
     cy.get(".error").should("be.visible");
+    cy.tick(3000);
+    cy.get(".error").should("not.be.visible");
   });
 
   it("verificar se campo de telefone aceita strings", () => {
@@ -28,6 +37,7 @@ describe("Verificar o atendimento ao cliente TAT", () => {
   });
 
   it("verificar se campo de telefone marcado como obrigatorio", () => {
+    cy.clock();
     cy.get("#firstName").type("teste");
     cy.get("#lastName").type("teste");
     cy.get("#email").type("lallaal@gmail.com");
@@ -35,7 +45,10 @@ describe("Verificar o atendimento ao cliente TAT", () => {
     cy.get("#phone-checkbox").check();
 
     cy.contains("button", "Enviar").click();
+
     cy.get(".error").should("be.visible");
+    cy.tick(3000);
+    cy.get(".error").should("not.be.visible");
   });
 
   it("preencher e limpar os campos", () => {
