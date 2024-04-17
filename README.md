@@ -1,9 +1,5 @@
 # cy-test
 
-[![main](https://github.com/wlsf82/cy-data-test/actions/workflows/ci.yml/badge.svg)](https://github.com/wlsf82/cy-data-test/actions)
-
-Sample project to demonstrate a `cy.dataTest` Cypress custom command.
-
 ## Pre-requirements
 
 It is required to have Node.js and npm installed to run this project.
